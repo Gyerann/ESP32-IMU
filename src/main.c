@@ -61,8 +61,8 @@ static int s_retry_num = 0;
 
 esp_err_t send_web_page(httpd_req_t *req)
 {
-
-    int response = httpd_resp_send(req, orientationHTML, HTTPD_RESP_USE_STRLEN);
+    httpd_resp_set_hdr(req, "access-control-allow-origin", "*");
+    int response = httpd_resp_send(req, orientationHTML, HTTPD_RESP_USE_STRLEN);    
     return response;
 }
 
@@ -194,7 +194,6 @@ httpd_handle_t setup_server(void)
         httpd_register_uri_handler(server, &uri_orientation);
         //httpd_register_uri_handler(server, &uri_off);
     }
-
     return server;
 }
 
@@ -288,7 +287,7 @@ void app_main() {
     while(true){
         read_g();
         calc_orientation(UNIT_DEGREE);
-        sprintf(orientationHTML, "{\"pitch\": %.1f,\"roll\": %.1f}", pitch, roll); 
+        sprintf(orientationHTML, "{\"pitch\":%.1f,\"roll\":%.1f}", pitch, roll); 
         vTaskDelay(50);
     }
 
